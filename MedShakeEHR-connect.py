@@ -97,11 +97,11 @@ def get():
     boutonGet['command']=get
 
 def send():
-  requests.post(config['SERVEUR']['adresse']+ "/rest/uploadNewDoc/?timestamp="+datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+'&title='+selectedtitre.get()+'&filename='+selectedtitre.get()+'.txt', auth=(selecteduser.get(), selectedpassword.get()), data=bytes(entree.get('1.0', 'end'), 'utf-8'))
+  requests.post(config['SERVEUR']['adresse']+ "/rest/uploadNewDoc/?timestamp="+datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+'&title='+selectedexamen.get()+'&filename='+selectedexamen.get()+'.txt', auth=(selecteduser.get(), selectedpassword.get()), data=bytes(entree.get('1.0', 'end'), 'utf-8'))
   boutonSend['state']='disabled'
 
 def save():
-  config['GENERAL']={'titres' :  selectedtitres.get()}
+  config['GENERAL']={'examens' :  selectedexamens.get()}
   config['SERVEUR']={'adresse' :  selectedadresse.get(), 'user' : selecteduser.get(), 'password' : str(base64.b64encode(bytes(selectedpassword.get(), "utf-8")), 'utf-8')}
   config['PORTSERIE']={'port' :  selectedport.get(), 'bauds' : selectedbauds.get(), 'bits' : selectedbits.get(), 'parite' : selectedparite.get(), 'stop': selectedstop.get()}
   with open(os.path.expanduser('~/MedShakeEHR-connect.ini'), 'w') as configfile:
@@ -119,7 +119,7 @@ def readconfig():
   if config.read(os.path.expanduser('~/MedShakeEHR-connect.ini')):
     configuration.withdraw()
     if 'GENERAL' in config:
-      selectedtitres.set(config['GENERAL']['titres'])
+      selectedexamens.set(config['GENERAL']['examens'])
     if 'SERVEUR' in config:
       selectedadresse.set(config['SERVEUR']['adresse'])
       selecteduser.set(config['SERVEUR']['user'])
@@ -142,11 +142,11 @@ configuration['bg']='white'
 # frame Général
 frameG = tk.LabelFrame(configuration, borderwidth=2, text='Général', relief='groove', background='white')
 frameG.pack(padx=10, pady=5)
-selectedtitres = tk.StringVar()
-labeltitres = tk.Label(frameG, background='white', text="Titres (séparés par virgules)")
-labeltitres.pack(anchor='w', padx=5, pady=5)
-inputtitres = tk.Entry(frameG, textvariable=selectedtitres, width=30)
-inputtitres.pack(padx=5, pady=(0,10))
+selectedexamens = tk.StringVar()
+labelexamens = tk.Label(frameG, background='white', text="Examens (séparés par virgules)")
+labelexamens.pack(anchor='w', padx=5, pady=5)
+inputexamens = tk.Entry(frameG, textvariable=selectedexamens, width=30)
+inputexamens.pack(padx=5, pady=(0,10))
 
 # frame serveur
 frameS = tk.LabelFrame(configuration, borderwidth=2, text='Serveur', relief='groove', background='white')
@@ -224,13 +224,13 @@ readconfig()
 entree = tkst.ScrolledText(principale, width=80, height=30, background='#eeeeee', state='disabled')
 entree.grid(row=0,column=0,columnspan=3)
 
-labeltitre=tk.Label(principale, background='white', text='Titre de l\'examen')
-labeltitre.grid(row=1,column=0, pady=10)
-selectedtitre = tk.StringVar()
-listetitres=selectedtitres.get().split(',')
-selecteurtitre = tkttk.Combobox(principale, values=listetitres, textvariable=selectedtitre, state='readonly', background = 'white')
-selecteurtitre.set(listetitres[0])
-selecteurtitre.grid(row=1,column=1, pady=10)
+labelexamen=tk.Label(principale, background='white', text='Examen')
+labelexamen.grid(row=1,column=0, pady=10)
+selectedexamen = tk.StringVar()
+listeexamens=selectedexamens.get().split(',')
+selecteurexamen = tkttk.Combobox(principale, values=listeexamens, textvariable=selectedexamen, state='readonly', background = 'white')
+selecteurexamen.set(listeexamens[0])
+selecteurexamen.grid(row=1,column=1, pady=10)
 
 boutonConfig = tk.Button(principale, text="Configuration", command=configure)
 boutonConfig.grid(row=2,column=0, pady=10, padx=0)
